@@ -4,44 +4,7 @@ import Link from "next/link"
 import { useState, useEffect, useCallback, useSyncExternalStore } from "react"
 import { Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
-
-// Theme store for managing dark mode
-const themeStore = {
-    getSnapshot: (): boolean => {
-        if (typeof window === 'undefined') return false
-        return document.documentElement.classList.contains('dark')
-    },
-    getServerSnapshot: (): boolean => false,
-    subscribe: (callback: () => void): (() => void) => {
-        const observer = new MutationObserver(callback)
-        if (typeof window !== 'undefined') {
-            observer.observe(document.documentElement, {
-                attributes: true,
-                attributeFilter: ['class']
-            })
-        }
-        return () => observer.disconnect()
-    },
-    setTheme: (isDark: boolean): void => {
-        if (isDark) {
-            document.documentElement.classList.add('dark')
-            localStorage.setItem('theme', 'dark')
-        } else {
-            document.documentElement.classList.remove('dark')
-            localStorage.setItem('theme', 'light')
-        }
-    },
-    initTheme: (): void => {
-        if (typeof window === 'undefined') return
-        const savedTheme = localStorage.getItem('theme')
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-        if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
-            document.documentElement.classList.add('dark')
-        } else {
-            document.documentElement.classList.remove('dark')
-        }
-    }
-}
+import { themeStore } from "@/lib/theme-store"
 
 const navLinks = [
     { href: "/#home", label: "หน้าแรก" },
@@ -74,7 +37,7 @@ function Navbar() {
                 {/* Logo */}
                 <Link href="/#home" className="flex items-center gap-2">
                     <Sparkles className="h-5 w-5 text-purple-600" />
-                    <span className="hidden lg:block font-bold">AI Native App</span>
+                    <span className="text-lg font-bold">AI Native App</span>
                 </Link>
 
                 {/* Desktop Navigation */}
