@@ -1,12 +1,24 @@
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { AuthBranding } from "./signin/auth-branding"
+import { redirect } from "next/navigation"
+import { headers } from "next/headers"
+import { auth } from "@/lib/auth"
 
-export default function AuthLayout({
+export default async function AuthLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+
+        const session = await auth.api.getSession({
+        headers: await headers() 
+    });
+
+    // ถ้ามี Session (Login แล้ว) ให้เตะไปหน้า Dashboard ทันที
+    if (session) {
+        redirect("/dashboard");
+    }
     return (
         <div className="flex min-h-screen">
             {/* Left Side - Form */}

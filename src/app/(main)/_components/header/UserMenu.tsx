@@ -54,6 +54,7 @@ export default function UserMenu() {
         .join("")
         .toUpperCase()
         .slice(0, 2)
+    console.log("User Session:", session)
 
     return (
         <div className="relative flex items-center gap-2" ref={menuRef}>
