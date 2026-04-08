@@ -12,6 +12,7 @@ const navLinks = [
     { href: "/#about", label: "เกี่ยวกับเรา" },
     { href: "/#team", label: "ทีมงาน" },
     { href: "/#testimonial", label: "รีวิว" },
+    { href: "/#lead", label: "สนใจบริการ" },
 ]
 
 function Navbar() {

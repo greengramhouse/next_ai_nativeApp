@@ -1,5 +1,5 @@
+import DashboardContent from "@/app/(main)/dashboard/DashboardContent"
 import { Metadata } from "next"
-import DashboardContent from "./DashboardContent"
 
 export const metadata: Metadata = {
     title: "Dashboard",

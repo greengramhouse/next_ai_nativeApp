@@ -5,22 +5,36 @@ import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { Sparkles, ArrowLeft, CheckCircle } from "lucide-react"
+import { Sparkles, ArrowLeft, CheckCircle, AlertCircle } from "lucide-react"
+import { authClient } from "@/lib/auth-client"
 
 export default function ForgotPasswordForm() {
     const [email, setEmail] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const [isSubmitted, setIsSubmitted] = useState(false)
+    const [error, setError] = useState("")
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsLoading(true)
+        setError("")
 
-        // TODO: เชื่อมต่อ Better Auth forgot password API
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        try {
+            const res = await authClient.requestPasswordReset({
+                email,
+                redirectTo: "/auth/reset-password",
+            })
 
-        setIsSubmitted(true)
-        setIsLoading(false)
+            if (res.error) {
+                setError(res.error.message || "เกิดข้อผิดพลาด")
+            } else {
+                setIsSubmitted(true)
+            }
+        } catch {
+            setError("เกิดข้อผิดพลาดในการส่งอีเมล")
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     if (isSubmitted) {
@@ -86,6 +100,13 @@ export default function ForgotPasswordForm() {
 
             {/* Email Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
+                {error && (
+                    <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded-lg">
+                        <AlertCircle className="w-4 h-4 shrink-0" />
+                        {error}
+                    </div>
+                )}
+
                 <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <Input

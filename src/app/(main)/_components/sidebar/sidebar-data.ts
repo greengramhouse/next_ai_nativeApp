@@ -9,6 +9,7 @@ import {
     MessagesSquare,
     HelpCircle,
     ClipboardList,
+    UserCheck,    
     type LucideIcon,
 } from "lucide-react"
 
