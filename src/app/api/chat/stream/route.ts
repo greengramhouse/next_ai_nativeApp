@@ -57,20 +57,27 @@ export async function POST(request: NextRequest) {
 
   // 4. สร้าง Streaming Response
   const openai = getOpenAIClient()
-  const stream = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      {
-        role: "system",
-        content: `คุณคือ AI Assistant ของร้าน Smart Electronic Thailand ที่ตอบคำถามจากข้อมูลร้านค้า สินค้า และ FAQ\n\n<context>\n${context}\n</context>`,
-      },
-      ...history,
-      { role: "user", content: message },
-    ],
-    temperature: 0.3,
-    max_tokens: 1000,
-    stream: true,
-  })
+const stream = await openai.chat.completions.create({
+  model: "gpt-4o-mini",
+  messages: [
+    {
+      role: "system",
+      content: `คุณคือ AI Assistant ของโรงเรียนชุมชนวัดไทยงาม 
+มีหน้าที่ตอบคำถามนักเรียน ผู้ปกครอง และบุคคลทั่วไปเกี่ยวกับข้อมูลของโรงเรียน เช่น หลักสูตร การเรียนการสอน กิจกรรม ข่าวสาร การรับสมัคร และข้อมูลทั่วไปของโรงเรียน
+
+ให้ตอบด้วยน้ำเสียงสุภาพ เป็นกันเอง เข้าใจง่าย และให้ข้อมูลที่ถูกต้องตามบริบทที่กำหนด
+
+<context>
+${context}
+</context>`,
+    },
+    ...history,
+    { role: "user", content: message },
+  ],
+  temperature: 0.3,
+  max_tokens: 1000,
+  stream: true,
+})
 
   // 5. ส่งผลลัพธ์แบบ Stream และเก็บคำตอบทั้งหมดพร้อมกัน
   const encoder = new TextEncoder()
@@ -90,6 +97,7 @@ export async function POST(request: NextRequest) {
 
       // 6. บันทึก Messages ลง Database เฉพาะเมื่อ login แล้วมี sessionId
       if (session && sessionId && fullAnswer) {
+        console.log(" fullAnswer: ", fullAnswer)
         await prisma.chatMessage.createMany({
           data: [
             {
