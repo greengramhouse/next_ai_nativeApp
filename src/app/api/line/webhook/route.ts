@@ -203,7 +203,7 @@ export async function POST(request: NextRequest) {
 
           // สร้างคำตอบด้วย RAG
           try {
-            const response = await generateRAGResponse(cleanMessage, [], 3)
+            const response = await generateRAGResponse(cleanMessage, [], 5)
             const sources = response.sources.map((s) => ({
               source: s.metadata?.source || "N/A",
               similarity: s.similarity ?? 0,
@@ -218,7 +218,7 @@ export async function POST(request: NextRequest) {
         } else {
           // Chat 1:1: ตอบทุกข้อความ
           try {
-            const response = await generateRAGResponse(userMessage, [], 3)
+            const response = await generateRAGResponse(userMessage, [], 5)
             const sources = response.sources.map((s) => ({
               source: s.metadata?.source || "N/A",
               similarity: s.similarity ?? 0,
